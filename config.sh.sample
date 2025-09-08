@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Route53 設定
+ZONE_ID="YOUR_ZONE_ID"
+RECORD_NAME="your-domain.com."
+TTL=300
+
+# プロジェクトパス
+PROJECT_PATH="/path/to/r53_ddns_tools"

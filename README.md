@@ -17,12 +17,14 @@ AWS Route53を使用したDynamic DNSツールです。定期的にグローバ�
 
 ## セットアップ
 
-1. スクリプトの設定値を編集：
+1. 設定ファイルを作成：
    ```bash
-   vim update_ddns.sh
+   cp config.sh.sample config.sh
+   vim config.sh
    ```
    - `ZONE_ID`: Route53のゾーンID
    - `RECORD_NAME`: 更新するレコード名
+   - `PROJECT_PATH`: プロジェクトの絶対パス
 
 2. systemdサービスの有効化：
    ```bash
@@ -53,5 +55,7 @@ journalctl -u update-ddns.service -f
 ## ファイル構成
 
 - `update_ddns.sh`: メインスクリプト
+- `config.sh.sample`: 設定ファイルのサンプル
+- `config.sh`: 環境固有の設定ファイル（Git管理対象外）
 - `etc/systemd/system/update-ddns.service`: systemdサービス設定
 - `etc/systemd/system/update-ddns.timer`: systemdタイマー設定

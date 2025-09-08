@@ -13,3 +13,6 @@ venv/
 
 # Environment variables
 .env
+
+# Configuration files
+config.sh

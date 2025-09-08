@@ -6,13 +6,12 @@ eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
-# venv activate
-source /path/to/r53_ddns_tools/.venv/bin/activate
+# 設定ファイル読み込み
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/config.sh"
 
-# 設定値
-ZONE_ID="YOUR_ZONE_ID"    # Route53のゾーンID
-RECORD_NAME="your-domain.com."
-TTL=300
+# venv activate
+source "$PROJECT_PATH/.venv/bin/activate"
 DATETIME=$(date +%F_%T)
 
 # 現在のグローバルIPを取得
