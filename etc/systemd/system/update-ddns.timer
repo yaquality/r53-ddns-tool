@@ -1,0 +1,10 @@
+[Unit]
+Description=Run update zone-record every 5 minutes
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+Persistent=false
+
+[Install]
+WantedBy=timers.target

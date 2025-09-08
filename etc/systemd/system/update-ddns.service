@@ -1,0 +1,7 @@
+[Unit]
+Description=Run update zone-record
+
+[Service]
+Type=oneshot
+User=YOUR_USERNAME
+ExecStart=/path/to/r53_ddns_tools/update_ddns.sh

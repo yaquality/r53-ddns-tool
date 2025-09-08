@@ -1,0 +1,15 @@
+# Python virtual environment
+.venv/
+venv/
+
+# Temporary files
+/tmp/
+
+# Log files
+*.log
+
+# AWS credentials
+.aws/
+
+# Environment variables
+.env
