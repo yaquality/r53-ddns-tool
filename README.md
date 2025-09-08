@@ -22,20 +22,61 @@ AWS Route53を使用したDynamic DNSツールです。定期的にグローバ�
 
 ### 設定
 
-1. AWS CLIの設定：
+1. AWS設定：
+
+   **a) IAMユーザーの作成（AWSコンソール）:**
+   - AWSコンソールにIAMサービスでアクセス
+   - 「ユーザー」→「ユーザーを追加」
+   - ユーザー名を入力（例: `ddns-user`）
+   - アクセスキーの種類: 「アクセスキー - プログラムによるアクセス」を選択
+
+   **b) IAMポリシーの作成とアタッチ:**
+   - 「ポリシー」→「ポリシーの作成」
+   - ポリシー名: `Route53DDNSPolicy`
+   - 以下のJSONを貼り付け（`YOUR_ZONE_ID`を実際のゾーンIDに置換）:
+   ```json
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Effect": "Allow",
+               "Action": [
+                   "route53:ListResourceRecordSets",
+                   "route53:ChangeResourceRecordSets"
+               ],
+               "Resource": "arn:aws:route53:::hostedzone/YOUR_ZONE_ID"
+           }
+       ]
+   }
+   ```
+   - 作成したユーザーにポリシーをアタッチ
+   - アクセスキーとシークレットアクセスキーをメモ
+
+   **c) AWS CLIの設定:**
    ```bash
    aws configure
    ```
+   - AWS Access Key ID: 上記で作成したアクセスキー
+   - AWS Secret Access Key: 上記で作成したシークレットアクセスキー
+   - Default region name: ホストゾーンのリージョン（例: `us-east-1`）
+   - Default output format: `json`
 
+2. Route53ゾーンIDの確認：
+   ```bash
+   aws route53 list-hosted-zones
+   ```
+   ドメイン名から対応する`Id`を確認（`/hostedzone/`以降の部分）
+
+3. 設定ファイルを編集：
    ```bash
    vim config.sh
    ```
-   - `ZONE_ID`: Route53のゾーンID
-   - `RECORD_NAME`: 更新するレコード名
+   - `ZONE_ID`: Route53のゾーンID（上記で確認した値）
+   - `RECORD_NAME`: 更新するレコード名（例: `home.example.com.`）
    - `PROJECT_PATH`: プロジェクトの絶対パス（自動設定済み）
    - `EXECUTION_INTERVAL`: 実行間隔（例: 5min, 10min, 1h）
 
-3. systemdサービスの有効化：
+4. systemdサービスの有効化：
    ```bash
    ./setup_systemd.sh
    ```
