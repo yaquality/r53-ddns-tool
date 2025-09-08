@@ -10,24 +10,32 @@ AWS Route53を使用したDynamic DNSツールです。定期的にグローバ�
 
 ## 前提条件
 
-- AWS CLI設定済み
 - Route53ホストゾーンへのアクセス権限
-- pyenv環境
-- Python仮想環境（.venv）
+- Linux環境（systemd対応）
 
 ## セットアップ
 
-1. 設定ファイルを作成：
+### 初回導入
+```bash
+./setup_environment.sh
+```
+
+### 設定
+
+1. AWS CLIの設定：
    ```bash
-   cp config.sh.sample config.sh
+   aws configure
+   ```
+
+   ```bash
    vim config.sh
    ```
    - `ZONE_ID`: Route53のゾーンID
    - `RECORD_NAME`: 更新するレコード名
-   - `PROJECT_PATH`: プロジェクトの絶対パス
+   - `PROJECT_PATH`: プロジェクトの絶対パス（自動設定済み）
    - `EXECUTION_INTERVAL`: 実行間隔（例: 5min, 10min, 1h）
 
-2. systemdサービスの有効化：
+3. systemdサービスの有効化：
    ```bash
    ./setup_systemd.sh
    ```
@@ -53,6 +61,7 @@ journalctl -u update-ddns.service -f
 ## ファイル構成
 
 - `update_ddns.sh`: メインスクリプト
+- `setup_environment.sh`: 初回環境構築スクリプト
 - `setup_systemd.sh`: systemdセットアップスクリプト
 - `config.sh.sample`: 設定ファイルのサンプル
 - `config.sh`: 環境固有の設定ファイル（Git管理対象外）
