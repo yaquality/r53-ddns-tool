@@ -48,9 +48,9 @@ fi
 # Python 3.9以上の確認
 PYTHON_VERSION=$(pyenv versions --bare | grep -E '^3\.(9|[1-9][0-9])' | head -1)
 if [ -z "$PYTHON_VERSION" ]; then
-    echo "Python 3.9以上をインストールします..."
-    pyenv install 3.11.0
-    PYTHON_VERSION="3.11.0"
+    echo "Python 3.12.8をインストールします..."
+    pyenv install 3.12.8
+    PYTHON_VERSION="3.12.8"
 fi
 
 echo "使用するPythonバージョン: $PYTHON_VERSION"
