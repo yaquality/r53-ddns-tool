@@ -8,6 +8,26 @@ echo "Route53 DDNS Tools 環境セットアップを開始します..."
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo "プロジェクトディレクトリ: $PROJECT_DIR"
 
+# Pythonビルドに必要な依存関係のインストール
+echo "Pythonビルドに必要な依存関係をインストールします..."
+if command -v apt-get &> /dev/null; then
+    sudo apt-get update
+    sudo apt-get install -y make build-essential libssl-dev zlib1g-dev \
+        libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+        libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
+        libffi-dev liblzma-dev
+elif command -v yum &> /dev/null; then
+    sudo yum groupinstall -y "Development Tools"
+    sudo yum install -y zlib-devel bzip2 bzip2-devel readline-devel \
+        sqlite sqlite-devel openssl-devel xz xz-devel libffi-devel
+elif command -v dnf &> /dev/null; then
+    sudo dnf groupinstall -y "Development Tools"
+    sudo dnf install -y zlib-devel bzip2 bzip2-devel readline-devel \
+        sqlite sqlite-devel openssl-devel xz xz-devel libffi-devel
+else
+    echo "警告: パッケージマネージャーが見つかりません。手動で依存関係をインストールしてください。"
+fi
+
 # pyenvの確認とインストール
 if [ ! -d "$HOME/.pyenv" ] && ! command -v pyenv &> /dev/null; then
     echo "pyenvがインストールされていません。インストールしますか? (y/N)"
