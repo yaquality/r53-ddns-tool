@@ -9,12 +9,27 @@ PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo "プロジェクトディレクトリ: $PROJECT_DIR"
 
 # pyenvの確認とインストール
-if ! command -v pyenv &> /dev/null; then
+if [ ! -d "$HOME/.pyenv" ] && ! command -v pyenv &> /dev/null; then
     echo "pyenvがインストールされていません。インストールしますか? (y/N)"
     read -r response
     if [[ "$response" =~ ^[Yy]$ ]]; then
         curl https://pyenv.run | bash
-        echo "pyenvをインストールしました。シェルを再起動してから再実行してください。"
+        
+        # シェル設定ファイルに追加
+        SHELL_RC="$HOME/.bashrc"
+        if [ -n "$ZSH_VERSION" ]; then
+            SHELL_RC="$HOME/.zshrc"
+        fi
+        
+        echo '' >> "$SHELL_RC"
+        echo '# pyenv' >> "$SHELL_RC"
+        echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> "$SHELL_RC"
+        echo 'eval "$(pyenv init --path)"' >> "$SHELL_RC"
+        echo 'eval "$(pyenv init -)"' >> "$SHELL_RC"
+        echo 'eval "$(pyenv virtualenv-init -)"' >> "$SHELL_RC"
+        
+        echo "pyenvをインストールし、シェル設定を更新しました。"
+        echo "シェルを再起動してから再実行してください。"
         exit 0
     else
         echo "pyenvが必要です。手動でインストールしてください。"
@@ -23,10 +38,12 @@ if ! command -v pyenv &> /dev/null; then
 fi
 
 # pyenv初期化
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+if [ -d "$HOME/.pyenv" ]; then
+    export PATH="$HOME/.pyenv/bin:$PATH"
+    eval "$(pyenv init --path)"
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+fi
 
 # Python 3.9以上の確認
 PYTHON_VERSION=$(pyenv versions --bare | grep -E '^3\.(9|[1-9][0-9])' | head -1)
